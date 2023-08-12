@@ -1,47 +1,26 @@
 import requests
+from bs4 import BeautifulSoup
 
-def get_data(api_url, params):
-    response = requests.get(api_url, params=params)
+il = input("Bir il girin: ").lower()  # Kullanıcının girdiği ili küçük harfe çeviriyoruz
 
-    if response.status_code == 200:
-        data = response.json()  # Gelen veriyi JSON formatından Python nesnesine çeviriyoruz
-        return data
-    else:
-        return None
+url = f"https://www.harita.gov.tr/iller/{il}.html"
+response = requests.get(url)
 
-il = input("Bir il adı girin: ")
-api_url = f"https://www.harita.gov.tr/sunum/"  # API'nin URL'si
-
-# İnternet verisi için istek
-internet_params = {
-    "il": il
-}
-internet_veri = get_data(api_url, internet_params)
-
-if internet_veri:
-    internet_degeri = internet_veri.get("internet_verisi")
+if response.status_code == 200:
+    soup = BeautifulSoup(response.content, "html.parser")
     
-    if internet_degeri is not None:
-        print(f"{il} ilindeki internet verisi: {internet_degeri}")
-    else:
-        print(f"{il} iline ait internet verisi bulunamadı.")
-else:
-    print(f"{il} için internet verisi çekilemedi veya hata oluştu.")
-
-# IP adresleri için istek
-ip_params = {
-    "il": il
-}
-ip_veri = get_data(api_url, ip_params)
-
-if ip_veri:
-    ip_listesi = ip_veri.get("ip_list")
+    internet_sayisi = soup.find("div", class_="InternetSayisi").get_text()
+    turksat = "Türksat" in internet_sayisi
+    turktelekom = "Türk Telekom" in internet_sayisi
+    turkcell = "Türkcell" in internet_sayisi
     
-    if ip_listesi:
-        print(f"{il} iline ait IP adresleri:")
-        for ip in ip_listesi:
-            print(ip)
-    else:
-        print(f"{il} iline ait IP adresi bilgisi bulunamadı.")
+    print(f"{il.capitalize()} ilindeki internet sayısı: {internet_sayisi}")
+    
+    if turksat:
+        print("Türksat internet hizmeti mevcut.")
+    if turktelekom:
+        print("Türk Telekom internet hizmeti mevcut.")
+    if turkcell:
+        print("Turkcell internet hizmeti mevcut.")
 else:
-    print(f"{il} için IP adresi verisi çekilemedi veya hata oluştu.")
+    print("İl bulunamadı veya sayfaya erişim sağlanamadı.")
