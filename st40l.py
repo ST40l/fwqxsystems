@@ -16,7 +16,7 @@ url = f"https://www.harita.gov.tr/sunum/{il}"
 internet_params = {
     "il": il
 }
-internet_veri = get_data(api_url, internet_params)
+internet_veri = get_data(url, internet_params)  # api_url yerine url kullanmalısınız
 
 if internet_veri:
     internet_degeri = internet_veri.get("internet_verisi")
@@ -32,7 +32,7 @@ else:
 ip_params = {
     "il": il
 }
-ip_veri = get_data(api_url, ip_params)
+ip_veri = get_data(url, ip_params)  # api_url yerine url kullanmalısınız
 
 if ip_veri:
     ip_listesi = ip_veri.get("ip_list")
