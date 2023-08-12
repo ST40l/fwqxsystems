@@ -10,13 +10,13 @@ def get_data(api_url, params):
         return None
 
 il = input("Bir il adı girin: ")
-url = f"https://www.harita.gov.tr/sunum/{il}"
+api_url = f"https://www.harita.gov.tr/sunum/"  # API'nin URL'si
 
 # İnternet verisi için istek
 internet_params = {
     "il": il
 }
-internet_veri = get_data(url, internet_params)  # api_url yerine url kullanmalısınız
+internet_veri = get_data(api_url, internet_params)
 
 if internet_veri:
     internet_degeri = internet_veri.get("internet_verisi")
@@ -32,7 +32,7 @@ else:
 ip_params = {
     "il": il
 }
-ip_veri = get_data(url, ip_params)  # api_url yerine url kullanmalısınız
+ip_veri = get_data(api_url, ip_params)
 
 if ip_veri:
     ip_listesi = ip_veri.get("ip_list")
