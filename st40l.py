@@ -1,24 +1,19 @@
 import requests
 from bs4 import BeautifulSoup
 
-def get_city_data(city_name):
-    base_url = "https://www.harita.gov.tr/sunum/"
-    params = {"ilAdi": city_name}
-
-    response = requests.get(base_url, params=params)
+def get_internet_data(il):
+    url = f"https://www.harita.gov.tr/sunum/{il}"
+    response = requests.get(url)
 
     if response.status_code == 200:
         soup = BeautifulSoup(response.content, "html.parser")
-        
-        # Verilerin çekilmesi ve işlenmesi burada yapılabilir
-        # Örnek olarak, istediğiniz veriyi çekip gösterebilirsiniz
-        data = soup.find("div", class_="veri").get_text()
-
-        return data
+        # İnternet sayfasındaki ilgili veriyi burada çekebilirsiniz
+        # Örnek olarak başlığı çekelim:
+        title = soup.title.text
+        return title
     else:
-        return "Hata: İstek yapılamadı veya geçersiz cevap alındı."
+        return f"Sayfaya erişilemiyor. Hata kodu: {response.status_code}"
 
-if __name__ == "__main__":
-    city_name = input("Bir il adı girin: ")
-    city_data = get_city_data(city_name)
-    print(city_data)
+il = input("Bir il adı girin: ")
+veri = get_internet_data(il)
+print("İnternet Verisi:", veri)
